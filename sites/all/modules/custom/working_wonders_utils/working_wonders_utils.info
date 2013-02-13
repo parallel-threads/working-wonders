@@ -1,0 +1,5 @@
+; $Id$
+name = Working Wonders Utilities
+description = "Custom module to handle Working Wonders functionality."
+core = 6.x
+

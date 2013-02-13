@@ -1,0 +1,12 @@
+#block-views-HomepageGrid-block_1, #block-views-HomepageGrid-block_3 {
+	float: left;
+	width: 230px;
+}
+#block-views-HomepageGrid-block_1 img, #block-views-HomepageGrid-block_3 img {
+	max-width: 100%;
+}
+.midR, .midL {
+	width: 40%;
+	border: 1px solid #5a8263;
+	padding: 0 1em;
+}

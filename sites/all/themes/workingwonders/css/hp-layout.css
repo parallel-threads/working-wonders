@@ -1,0 +1,222 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.mid {
+	font-size: 1.2em;
+	width: 990px;
+}
+.mid div {
+	float: left;
+}
+/* force wrap in blog block on hp */
+.view-Blogs .view-content div {
+	width: 100%;
+}
+
+.midR, .midL {
+	width: 47%;
+	border: 1px solid #5a8263;
+	padding: 0 1em;
+}
+.midR h2, .midL h2 {
+	margin-top: .5em;
+}
+.midL {
+	margin-right: .5em;
+}
+.midR .field-content {
+	line-height: 1.6em;
+	margin-bottom: .5em;
+}
+.midR .view-header{
+	width: 100%;
+}
+
+.midR .view-content {
+	float: right;
+	width: 50%;
+	margin-top: -75px;
+}
+.midR img {
+	padding-top: .5em;
+}
+.mid img, .vid-box object {
+	float: left;
+	padding-right: 2em;
+	padding-bottom: .7em;
+}
+
+.mid div.title {
+	float: left;
+	padding-right: 2em;
+	padding-bottom: .7em;
+}
+
+.mid h2, .vid-box h2 {
+	font-size: 1.4em;
+	margin-bottom: 1em;
+	font-weight: normal;
+	text-transform: lowercase;
+}
+p {
+	margin-bottom: .5em;
+}
+.vid-box {
+	background: #e3e6e8;
+	padding: .2em 1em 0;
+	text-align: justify;
+	font-size: 1.2em;
+	margin-top: .7em;
+}
+.vid-box h2 {
+	margin-top: .5em;
+}
+.vid-box #content-area {
+	padding: 0;
+	font-size: 1em;
+}
+
+.more-link {
+	align: right;
+	vertical-align:text-bottom;
+}
+
+
+/* slide show styles */
+.hp-top {
+	margin-top: 10px;
+	height: 465px;
+}
+#block-views-HomepageSlideshow-block_1 {
+	float: left;
+	width: 490px;
+}
+#block-views-HomepageGrid-block_1, #block-views-HomepageGrid-block_3 {
+	float: left;
+	width: 241.5px;
+}
+#block-views-HomepageSlideshow-block_1 .view-content {
+  position: relative;
+}
+#block-views-HomepageSlideshow-block_1 .views-slideshow-controls-bottom {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+#block-views-HomepageGrid-block_1,
+#block-views-HomepageGrid-block_2,
+#block-views-HomepageGrid-block_3,
+#block-views-HomepageGrid-block_4 {
+  float: left;
+  margin: 0;
+}
+#block-views-HomepageGrid-block_1 p,
+#block-views-HomepageGrid-block_2 p,
+#block-views-HomepageGrid-block_3 p,
+#block-views-HomepageGrid-block_4 p {
+  margin: 0;
+}
+#block-views-HomepageGrid-block_1,
+#block-views-HomepageGrid-block_3 {
+  margin: 0 7px;
+}
+#block-views-HomepageGrid-block_1,
+#block-views-HomepageGrid-block_2 {
+  margin-bottom: 7px;
+}
+
+.views_slideshow_thumbnailhover_div_breakout_teaser {
+	display: block;
+  	background-color: #CCC;
+	text-indent: -999px;
+	overflow: hidden;
+	height: 15px;
+	width: 15px;
+	margin: 5px;
+	float: left;
+}
+.views_slideshow_thumbnailhover_div_breakout_teaser.activeSlide {
+  background-color: #FFF;
+}
+
+/* styling by Katy of SeascapeWebDesign.com 6/28/2011 */
+
+div.views-field-field-image-text-value {
+padding: 200px 0 0 0;
+position: absolute;
+color: #fff;
+/*background-color: #333;
+opacity: 0.8;
+*/
+width: 480px;
+margin: -100px 0 0 0;
+padding: 5px;
+font-size: 16pt;
+text-align: center;
+line-height: 40pt;
+font-weight: bold;
+}
+
+div.views-field-field-image-text-value a:link, div.views-field-field-image-text-value a:visited {
+	color: #fff;
+	text-decoration: none;
+}
+div.views-field-field-image-text-value a:hover, div.views-field-field-image-text-value a:active, div.views-field-field-image-text-value a:focus {
+	color: #fff;
+	text-decoration: underline;
+}
+
+#block-views-HomepageGrid-block_1 .views-field-field-image-text-value {
+width: 237px;
+font-size: 13pt; 
+text-align: center;
+line-height: 15pt;
+font-weight: bold;
+color: #fff;
+margin: -50px 0px 5px 0px;
+padding: 5px 0 5px 5px;
+/*background-color: #333;
+opacity: 0.8;*/
+}
+
+#block-views-HomepageGrid-block_2  .views-field-field-image-text-value {
+width: 237px;
+font-size: 13pt; 
+text-align: center;
+line-height: 15pt;
+font-weight: bold;
+color: #fff;
+margin: -50px 0px 5px 0px;
+padding: 5px 0 5px 5px;
+/*background-color: #333;
+opacity: 0.8;
+*/
+}
+
+#block-views-HomepageGrid-block_3  .views-field-field-image-text-value {
+width: 237px;
+font-size: 13pt; 
+text-align: center;
+line-height: 15pt;
+font-weight: bold;
+color: #fff;
+margin: -50px 0px 5px 0px;
+padding: 5px 0 5px 5px;
+/*background-color: #333;
+opacity: 0.8;*/
+}
+
+#block-views-HomepageGrid-block_4  .views-field-field-image-text-value {
+width: 237px;
+font-size: 13pt; 
+text-align: center;
+line-height: 15pt;
+font-weight: bold;
+color: #fff;
+margin: -50px 0px 5px 0px;
+padding: 5px 0 5px 5px;
+/*background-color: #333;
+opacity: 0.8;*/
+}

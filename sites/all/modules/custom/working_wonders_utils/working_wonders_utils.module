@@ -1,0 +1,35 @@
+<?php
+
+function working_wonders_utils_init() {
+  $path = drupal_get_path('module', 'working_wonders_utils');                
+  drupal_add_js($path . '/working_wonders_utils.js');
+}
+
+function working_wonders_utils_get_brand($node) {
+  $brands = array();
+  foreach ($node->taxonomy as $tid=>$term) {
+    if (working_wonders_utils_is_brand($term->tid)) {
+      $brands[] = $term->name;
+    }
+  }
+  return $brands;
+}
+
+function working_wonders_utils_is_brand($term_id) {
+  $ptids = db_query("SELECT parent FROM term_hierarchy WHERE tid = %d", $term_id);
+  while ($ptid = db_result($ptids)) {
+    if ($ptid == 144) {
+      return true;
+    } else {
+      return working_wonders_utils_is_brand($ptid);
+    }
+  }
+  return false;
+}
+
+function working_wonders_utils_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'simplenews_block_form_602') {
+    //drupal_set_message("<pre>" . print_r($form,1) . "</pre>");
+    $form['submit']['#value'] = 'Go';
+  }
+}

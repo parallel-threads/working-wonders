@@ -1,0 +1,54 @@
+<?php
+
+/**
+* Implements hook_node_deploy
+*
+* Edit a node before it gets sent off. This is mostly to fix CCK checkbox faults.
+* @param object $node A reference to the node that will be deployed
+* @return $node The edited version
+*/
+function deploy_fix_cck_node_deploy( &$node ) {
+  /*switch ($node->type) {
+    case 'image':
+      // fix categories checkboxes
+      mymodule_fix_cck_checkboxes($node->field_image_blognames['value'], true);
+      break;
+    case 'blog':
+      // fix categories checkboxes
+      mymodule_fix_cck_checkboxes($node->field_blog_categories['value'], true);
+      break;
+    default:
+      break;
+  }*/
+
+  //always fix robots
+  mymodule_fix_cck_checkboxes($node->nodewords['robots']['value']);
+
+  return $node;
+}
+
+/**
+* A helper function to fix CCK checkbox arrays.
+* If a 0 index is set in the array, it will get unset. It optionally sets IDs to
+* be values of the array as well in cases where code needs the ID but just gets
+* 1 or true.
+* @param array $aCheckboxValues The "value" array for the checkboxes set.
+* E.g. $node->nodewords['robots']['value']
+* @param boolean $bSetIdToVal If set to true, all values that evaluate to True
+* will be re-set to match the key. This fixes most taxonomy checkbox problems.
+* @return array The fixed array
+*/
+function mymodule_fix_cck_checkboxes(&$aCheckboxValues, $bSetIdToVal = false) {
+  if (isset($aCheckboxValues[0])) {
+    unset($aCheckboxValues[0]);
+  }
+  if ($bSetIdToVal) {
+    foreach ($aCheckboxValues as $key => &$isChecked) {
+      if ($isChecked) {
+$isChecked = $key;
+      }
+    }
+  }
+  return $aCheckboxValues;
+}
+?>

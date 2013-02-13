@@ -1,0 +1,39 @@
+/* $Id$ */
+
+/* Fixed layout; standard sidebar placement */
+
+#page, #page-wrapper, .region-page-closure, body.no-sidebars #content {
+  width: 830px;
+}
+
+div.region-sidebar-first {
+  width: 255px;
+  margin-right: -255px;
+}
+
+div.region-sidebar-second {
+  width: 255px;
+  margin-left: 575px;
+  margin-right: -830px;
+}
+
+#content {
+  margin-right: -830px;
+}
+
+body.sidebar-first #content {
+  width: 575px;
+  margin-left: 255px;
+  margin-right: -830px;
+}
+
+body.sidebar-second #content {
+  width: 575px;
+  margin-right: -575px;
+}
+
+body.two-sidebars #content {
+  width: 320px;
+  margin-left: 255px;
+  margin-right: -575px;
+}

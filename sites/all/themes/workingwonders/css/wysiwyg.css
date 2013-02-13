@@ -1,0 +1,35 @@
+.grey_small, .grey_normal, .grey_medium, .grey_large {
+  color: #666666;
+}
+
+.green_small, .green_normal, .green_medium, .green_large {
+  color: #336633;
+}
+
+.brown_small, .brown_normal, .brown_medium, .brown_large {
+  color: #996633;
+}
+
+.orange_small, .orange_normal, .orange_medium, .orange_large {
+  color: #FF6600;
+}
+
+.grey_small, .green_small, .brown_small, .orange_small {
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.grey_medium, .green_medium, .brown_medium, .orange_medium {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.grey_large, .green_large, .brown_large, .orange_large {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.image_left_aligned {
+  float: left;
+  margin-right: 10px;
+}

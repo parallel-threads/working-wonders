@@ -1,0 +1,6 @@
+name = Product Import
+description = A module to enable store admins to import product lists.
+dependencies[] = uc_product
+;dependencies[] = uc_quotes
+package = Ubercart - extra
+core = 6.x

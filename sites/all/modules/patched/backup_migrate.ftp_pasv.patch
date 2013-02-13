@@ -1,0 +1,70 @@
+Index: includes/destinations.ftp.inc
+===================================================================
+RCS file: /cvs/drupal-contrib/contributions/modules/backup_migrate/includes/destinations.ftp.inc,v
+retrieving revision 1.1.2.6
+diff -u -p -r1.1.2.6 destinations.ftp.inc
+--- includes/destinations.ftp.inc	13 Sep 2010 02:41:49 -0000	1.1.2.6
++++ includes/destinations.ftp.inc	12 Nov 2010 17:44:01 -0000
+@@ -72,13 +72,28 @@ class backup_migrate_destination_ftp ext
+       "#default_value" => @$this->dest_url['port'] ? $this->dest_url['port'] : '21',
+       "#weight" => 15,
+     );
++    $form['pasv'] = array(
++      '#type' => 'checkbox',
++      '#title' => t('Enable PASV transfers?'),
++      '#default_value' => $this->get_pasv(),
++      '#weight' => 50,
++    );
+     return $form;
+   }
+ 
++  function set_pasv($value) {
++    $this->settings['pasv'] = (bool)$value;
++  }
++
++  function get_pasv() {
++    return isset($this->settings['pasv']) ? $this->settings['pasv'] : FALSE;
++  }
++
+   function ftp_object() {
+     if (!$this->ftp) {
+       $this->dest_url['port'] = empty($this->dest_url['port']) ? '21' : $this->dest_url['port'];
+-      $this->ftp = drupal_ftp_ftp_object($this->dest_url['host'], $this->dest_url['port'], $this->dest_url['user'], $this->dest_url['pass'], $this->dest_url['path']);
++      $this->dest_url['pasv'] = $this->get_pasv();
++      $this->ftp = drupal_ftp_ftp_object($this->dest_url['host'], $this->dest_url['port'], $this->dest_url['user'], $this->dest_url['pass'], $this->dest_url['path'], $this->dest_url['pasv']);
+     }
+     return $this->ftp;
+   }
+@@ -96,7 +111,7 @@ define('DRUPAL_FTP_FT_FILE', 1);
+ /**
+  *  creates a new ftp object. if any elements of ftp_map are missing, they'll be filled with the server defaults.
+  */
+-function drupal_ftp_ftp_object($server, $port, $user, $pass, $dir) {
++function drupal_ftp_ftp_object($server, $port, $user, $pass, $dir, $pasv) {
+   $ftp = new stdClass();
+ 
+   $ftp->__server = $server;
+@@ -104,6 +119,7 @@ function drupal_ftp_ftp_object($server, 
+   $ftp->__user = $user;
+   $ftp->__password = $pass;
+   $ftp->__directory = $dir;
++  $ftp->__pasv = $pasv;
+ 
+   return $ftp;
+ }
+@@ -142,6 +158,15 @@ function drupal_ftp_connect(&$ftp) {
+       _backup_migrate_message('FTP Error: Couldn\'t change into the @directory directory', array('@directory' => $ftp->__directory), 'error');
+       return FALSE;
+     }
++
++    // Set PASV - if needed
++    if ($ftp->__pasv) {
++      $pasv = @ftp_pasv($ftp->__conn, TRUE);
++      if (!$pasv) {
++        _backup_migrate_message('FTP Error: Couldn\'t set PASV mode', array(), 'error');
++        return FALSE;
++      }
++    }
+   }
+ 
+   // Everything worked OK, return TRUE

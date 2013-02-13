@@ -1,0 +1,12 @@
+; $Id:
+name = Deployment CCK Bug Fix
+description = "Fix CCK \"Illegal choice 0\" bug."
+dependencies[] = deploy
+package = Deployment
+core = 6.x
+; Information added by drupal.org packaging script on 2010-05-24
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "deploy_fix_cck"
+datestamp = "1274659464"
+

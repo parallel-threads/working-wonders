@@ -1,0 +1,496 @@
+<?php
+
+/**
+ * The Product Import module for Ubercart.
+ */
+
+/******************************************************************************
+ * Includes and constants                                                          *
+ ******************************************************************************/
+
+// Bootstrap Drupal
+//require 'modules/node/node.pages.inc';
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
+/******************************************************************************
+ * Help functions                                                            *
+ ******************************************************************************/
+
+/**
+ * Implementation of hook_help().
+ */
+
+function uc_prodimport_help($path, $arg) {
+    switch ($path) {
+        case 'admin/store/products/uc_prodimport':
+          $output = '<p><font color="#ff0000">'. t("WARNING!  Continuing with this module will delete all current product information. ");
+          $output .= t("Make sure you have good backups.") .'</font></p>';
+          $output .= '<p>'.("Disable this module when not in use to prevent accidents.") .'</p>';
+          return $output;
+    }
+}
+
+/******************************************************************************
+ * File functions                                                          *
+ ******************************************************************************/
+
+function uc_prodimport_read_file($file){
+    $sFloc = $file->filepath; 
+    drupal_set_message("Reading data file $file->filename "); 
+    // read in csv file
+    if (($handle = fopen($sFloc, "r")) !== FALSE) { //Open the File.
+        // Set the parent multidimensional array key to 0.
+        $iKey = 0;
+        while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
+            // Count the total keys in the row.
+            $iCount = count($data);
+            // Populate the multidimensional array.
+            for ($iElement=0;$iElement<$iCount;$iElement++)
+            {
+                $aProds[$iKey][$iElement] = $data[$iElement];
+            }
+            $iKey++;
+        }
+        // Close the File.
+        fclose($handle);
+    }
+    
+    //delete $file
+    if(file_delete($sFloc)){
+        //  delete from files table
+        db_query("DELETE FROM {files} WHERE  filepath = '%s'", $sFloc);
+        drupal_set_message($sFloc . " deleted");
+    }
+    
+    return $aProds;
+}
+
+/******************************************************************************
+ * Database Functions                                                            *
+ ******************************************************************************/
+
+// node insert activities
+function uc_prodimport_insert($node, $aid = NULL){
+    // insert to core node and product tables
+    node_object_prepare($node);
+    node_save($node);
+    
+    // insert into uc_product_features
+    $data = array();
+    $pfid = NULL;
+    $nid = $node->nid;
+    $data['pfid'] = $pfid;
+    $data['nid'] = $nid;
+    //$data['fid'] = "quote";
+    //$data['description'] = "<strong>Requires the customer to receive a price quote.</strong>";
+    uc_product_feature_save($data);
+    //insert records for attributes
+    
+    if($aid != NULL && count($aid) > 0){
+		for($i = 0, $size = sizeof($aid); $i < $size; ++$i) {
+	    	if ($aid[$i] > 0){
+	    		//drupal_set_message('aid is '.$aid[$i]);
+	    		db_query("INSERT IGNORE INTO {uc_product_attributes} (nid, aid) VALUES (%d, %d)", $nid, $aid[$i]);
+	    		//db_query("INSERT IGNORE INTO {uc_product_attributes} (nid, aid, label, ordering, required, display, default_option) VALUES (%d, %d)
+	    		//db_query("INSERT IGNORE INTO {uc_product_options} (nid, oid, cost, price, weight, ordering) SELECT %d, oid, cost, price, weight, ordering FROM {uc_class_attribute_options} WHERE pcid = '%s'", $node->nid, $node->type);
+	    	}
+	    }
+    }
+    // insert into quotes module
+    //$pfid = db_last_insert_id('uc_product_features', 'pfid');
+    //db_query("INSERT INTO {uc_quotes} (pfid, nid, quote) VALUES (%d, %d, %d)", $pfid, $nid, "1");
+    
+    // insert into uc_imageurl table
+    if(module_exists('uc_imageurl')){
+        $aVars = array($nid, $node->t_url, $node->f_url);
+        uc_imageurl_insert_img($aVars);
+    }
+    return true;
+}
+
+
+// imports data file and calls node insert functions
+function uc_prodimport_import_new($file, $action) {
+    drupal_set_message('Inserting new data into product tables. "'.$action. '" action selected.');
+    // initialize counters
+    $iInsertCount = 0;
+    
+    // request an array of values to be imported
+    $aProds = uc_prodimport_read_file($file);
+    
+    // confirm file contains expected number of columns
+    if(count($aProds[0]) != 40){
+        drupal_set_message("!!!Unexpected column count on row in import file!!! Count was ".count($aProds[0]));
+        return $iInsertCount;
+    }
+    
+    // remove the title row
+    unset($aProds[0]);
+    
+    // loop through array  
+    foreach($aProds as $aProd){
+    	//check to see if the product exists
+    	$nid = getProductBySKU(($aProd[1]));
+    	if( $nid && $action == 'skip') {
+	    	drupal_set_message('Skipping product '.$aProd[0].' '.$aProd[1]);
+			continue;
+    	}
+    	if($nid && $action == 'replace'){
+    		drupal_set_message('Replacing product '.$aProd[0].' '.$aProd[1]);
+    		node_delete($nid);
+    		$node = new stdClass();
+    	} else if($nid && $action == 'limited'){
+    		drupal_set_message('Updating product (limited) '.$aProd[0].' '.$aProd[1]);
+    		$node = node_load($nid, NULL, TRUE);
+    	} else if($nid){
+    		drupal_set_message('Updating product '.$aProd[0].' '.$aProd[1]);
+    		$node = node_load($nid, NULL, TRUE);
+    	} else {
+    		drupal_set_message('Creating product '.$aProd[0].' '.$aProd[1]);
+        	$node = new stdClass();
+    	}
+    	
+        $aid = NULL;   
+        
+        // Your script will probably pull this information from a database.
+        $node->title = $aProd[0];
+        
+        //next populate greenguide taxonomies
+        $greenguide = array(
+        	array(9, 'Reduces Waste'),
+        	array(10, 'Conserves Natural Resources'),
+        	array(11, 'Improves Air Quality'), 
+        	array(12, 'Saves Energy and/or Water'),
+        	array(13, 'Better Production Practices'), 
+        	array(14, 'Better Shipping Practices'), 
+        	array(15, 'Better Community Relations'),
+        	array(16, 'Manufacturing Location'),
+        );
+        
+        $greencnt = 0;
+        for ($i = 2; $i <= 8; $i++){
+        	if($aProd[$i] == 'x'){
+        		$green = $greenguide[$greencnt][0];
+        		//only update taxonomy if this is a new node or adding a taxonomy term
+        		if($nid){
+        			$result = db_query("SELECT nid, tid FROM {term_node} WHERE nid = '%s' AND tid = %s", $nid, $green );
+        			$row = db_fetch_object($result);
+					if(!$row){
+						$node->taxonomy[] = $green;
+					}
+        		} else {
+        			$node->taxonomy[] = $green;
+        		}
+        	}
+        	$greencnt = $greencnt + 1;
+        }
+
+        //Populate Manufacturing Location CCK field
+        if($aProd[9] != null && $aProd[9] != '') {
+        	$node->field_manufacturing_location[0]['value'] = $aProd[9];	
+        }
+        
+        $node->body = $aProd[10].$aProd[11].$aProd[12];        
+        
+        if($aProd[13] != null && $aProd[13] != '') {
+        	$node->field_dimensions[0]['value'] = $aProd[13];	
+        }
+        //field_shipping text field to store shipping details for display in product tab
+        if($aProd[14] != null && $aProd[14] != '') {
+        	$node->field_shipping[0]['value'] = $aProd[14];
+        }
+        $node->sell_price = preg_replace('/[\$,]/', '',  $aProd[15]); //formatting required
+                
+        if($aProd[17] != ''){
+        	$node->field_custom[0]['value'] = 1;
+        }
+        if($action != 'limited'){
+	        //Populate Attributes: look up the attribute using the name, get the aid, attributes get saved after saving the node
+	    	for ($i = 18; $i <= 20; $i++){ 
+	        	if($aProd[$i] != ''){
+	        		$attributeId = getAttribute($aProd[$i]);
+	        		if($attributeId > 0){
+	    				$aid = $attributeId;
+	        		}
+	        	}
+	    	}
+        }
+        
+        //TODO Remove files with the same filename
+        if($action != 'limited'){
+	        if ($aProd[21] != ''){
+		  		$images = explode ( '^' , $aProd[21]);
+		    	foreach($images as $image){
+			    	if($image != ''){
+						$filepath = '/tmp/'.$image;
+			    		if (file_exists($filepath)) {
+	        				$field = field_file_save_file($filepath, array(), file_directory_path());
+	        				$node->field_image_cache[] = $field;
+							drupal_set_message('Image uploaded to '.$node->field_image_cache[0]['filepath']);
+			    		} else {
+			    			drupal_set_message('ERROR Cannot upload image: ' . $filepath . ' does not exist.');
+			    		}
+			  		
+			    	}
+		    	}
+	        }
+	        //import doc filenames delimited by ^ and add paths
+	        //TODO Replace files with the same filename
+	        if ($aProd[22] != ''){
+		        $files = explode ( '^' , $aProd[22]); 
+		        foreach($files as $file){
+		        	if($file != ''){
+		        		$filepath = '/tmp/'.$file;
+			    		if (file_exists($filepath)) { 
+	        				$field = field_file_save_file($filepath, array(), file_directory_path());
+	        				$node->field_documents[] = $field;
+	      				}
+			  		drupal_set_message('File uploaded to '.$node->field_image_cache[0]['filepath']);
+		        	}        
+		        }
+	        }
+        }
+        //flag field to indicate free shipping
+    	if($aProd[23] != ''){
+        	$node->field_free_shipping[0]['value'] = 1;
+        }
+        
+        //field to store shipping flatrate // integer
+		$node->flatrate[1] = preg_replace('/[\$,]/', '',  $aProd[24]);
+		 
+		//Populate all Category vocabularly terms: Category 1 - 6, Room, Brand
+		for ($i = 25; $i <= 32; $i++){ 
+		    if(getTerm($aProd[$i]) != null && getTerm($aProd[$i]) != ''){    
+				$terms = getTerm($aProd[$i]); 
+		        $node->field_category[] = $terms[0];
+		    }
+		}
+		
+		//column 33 unused
+		
+		//TODO Add collection taxonomy tid
+		//might have to look up tid
+        if($aProd[34] != ''){
+        	$node->taxonomy[] = $aProd[34];
+        }
+        
+		//populate the related product fields
+		for ($i = 35; $i <= 38; $i++){
+			$rnid = getRelatedProducts($aProd[$i]);
+			if($rnid != null && $rnid != ''){
+				foreach ($rnid as $anid){ 
+	        		$node->field_related_products[]['nid'] = $anid; //import node reference
+				}
+			}
+		}
+		
+		if($aProd[39] != ''){
+			$node->field_manufacturer_id[0]['value'] = $aProd[38];		
+		}
+		//$node->field_category[$node->language][]['tid'] = getTermId($aProd[30]); // D7 method 
+		//$node->taxonomy[] = $term; //will populate Related Poduct
+		//$taxonomy['tags'][$vocab->vid] = implode(',', (array)$values[$fieldname]);
+        
+        //$node->teaser = $aProd[2];
+        $node->type = 'product';   // constant
+        $node->created = time(); // constant
+        $node->changed = $node->created; // constant
+        $node->status = 1; // constant
+        $node->promote = 1; // constant
+        $node->sticky = 0; // constant
+        $node->format = 1;       // Filtered HTML - constant
+        $node->uid = 1;          // UID of content owner - constant
+        $node->language = 'en'; // constant
+        
+        // product specific node fields
+        $node->model = $aProd[1];
+        //$node->list_price = $aProd[4]; //formatting required
+        //$node->cost = $aProd[5]; //formatting required
+        //$node->weight = $aProd[7];
+        //$node->weight_units = $aProd[8];
+        //$node->length = $aProd[9];
+        //$node->width = $aProd[10];
+        //$node->height = $aProd[11];
+        //$node->length_units = $aProd[12];
+        //$node->pkg_qty = $aProd[13];
+        //if default qty is blank set it to 1 so qty field displays
+        if($aProd[16] == ''){
+        	$node->default_qty = 1;
+        } else {
+        	$node->default_qty = $aProd[16];
+        }
+        //$node->unique_hash is handled by product api
+        $node->ordering = '0';
+        $node->shippable = '1';
+        //$node->shipping_type = 'small_package';
+        //$node->t_url = $aProd[18];
+        //$node->f_url = $aProd[19];
+        // call insert function
+        $inserted = uc_prodimport_insert($node, $aid);  
+        // increment counter    	
+        $iInsertCount++;     
+    }  
+       
+    return $iInsertCount;
+    
+}
+
+// empties old product data from DB
+function uc_prodimport_purge_nodes() {
+
+    $amt = 8000; // how many items to delete in one go?
+    $delnodes = array(); // array of node ids deleted
+  
+    $result = db_query_range("SELECT nid FROM {node} WHERE type LIKE 'product'", 0, $amt);
+  
+    $n = 0;
+    while ($data = db_fetch_array($result)) {
+      $delnodes[] = $data['nid'];
+      node_delete($data['nid']);
+      // delete from uc_imageurl, if active
+      if(module_exists('uc_imageurl')){uc_imageurl_delete_img($data['nid']);}  
+      ++$n;
+    }
+    
+    // empty out product tables
+    // Note that TRUNCATE may only work with MySQL
+    if(db_table_exists("uc_products")){db_query("TRUNCATE TABLE {uc_products}");}
+    if(db_table_exists("uc_product_classes")){db_query("TRUNCATE TABLE {uc_product_classes}");}
+    if(db_table_exists("uc_product_features")){db_query("TRUNCATE TABLE {uc_product_features}");}
+    //if(db_table_exists("uc_quotes")){db_query("TRUNCATE TABLE {uc_quotes}");}
+  
+    return count($delnodes);
+}
+
+/******************************************************************************
+ * Menu functions                                                             *
+ ******************************************************************************/
+
+  function uc_prodimport_menu() {
+    
+    $items = array();
+    $items['admin/store/products/uc_prodimport'] = array(
+    'title' => 'Import products',
+    'type' => MENU_NORMAL_ITEM,
+    'description' => 'Import products into UberCart.',
+    'page arguments' => array('uc_prodimport_form'),
+    'page callback' => 'drupal_get_form',
+    'weight' => -2,
+    'access arguments' => array('administer products'),
+    );  
+    return $items; 
+  }
+
+/******************************************************************************
+ * Form functions                                                             *
+ ******************************************************************************/
+  
+  function uc_prodimport_form($form_state) {
+    $form = array(); // reset array
+    $form['#redirect'] = array('admin/store/products');
+    $form['#attributes'] = array('enctype' => "multipart/form-data");
+    
+    $form['purge'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Delete current product set'),
+    '#description' => t('For multiple uploads, uncheck after the first run. Purge occurs before import.'), 
+    );
+    
+    $form['action'] = array(
+      '#type' => 'radios', 
+      '#title' => t('How would you like to handle existing data?'), 
+      '#default_value' => variable_get('comment_preview', 1), 
+      '#options' => array('update' => t('Update all product fields'), 'limited' => t('Limited Update (skip attributes, files, and images)'), 'replace' => t('Replace all product data'), 'skip' => t('Skip product if it already exists')), 
+    // array('return_value1' => t('Display Value 1')
+    );
+    
+    $form['datafile'] = array(
+    '#type' => 'file', 
+    '#title' => t('Upload data'), 
+    '#size' => 48, 
+    '#description' => t('A CSV in the requisite format'), 
+    );
+    
+    $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' =>  t('Submit'),
+    '#id' => 'upload-products',
+    );
+
+    return $form;
+  }
+  
+ 
+  function uc_prodimport_form_submit($form, &$form_state) {
+
+    // set datafile upload variables
+    $source = 'datafile';
+    $validators = array( 'file_validate_extensions' => array( 'csv' ) );
+    $dest = file_directory_temp();
+    $action = $form_state['values']['action'];
+    
+    // upload datafile
+    $file = file_save_upload($source,$validators,$dest, false);
+    if($file){
+        drupal_set_message("File successfully uploaded as " . $file->filepath);
+    }else{
+        drupal_set_message('No file uploaded.');
+    }
+        
+
+    // purge tables of current products, if checked
+    if($form_state['values']['purge']==1){
+      // delete all product nodes
+      $n = uc_prodimport_purge_nodes();
+      drupal_set_message("$n products deleted."); 
+    }else{
+      drupal_set_message("!!!No products were deleted.!!!"); 
+    }
+        
+    //insert $file into current table
+    if($file){
+      $iInsertCount = uc_prodimport_import_new($file, $action);
+      drupal_set_message("$iInsertCount rows imported.");
+    }
+    //confirm process completed
+    drupal_set_message("Process completed");
+}
+
+function getTerm($name){
+	$result = db_query("SELECT tid FROM {term_data} WHERE name = '%s'", $name);
+	$tids = array();
+	while ($row = db_fetch_object($result)) {
+	  $terms[] = array('value'=>$row->tid, 'view'=>$name);
+	}
+	/*print('<pre>');
+	print_r($terms);
+	print('</pre>');*/
+	return $terms;
+}
+
+function getAttribute($name){
+	$result = db_query("SELECT aid FROM {uc_attributes}  WHERE name = '%s'", $name);
+	$aid = array();
+	while ($row = db_fetch_object($result)) {
+	  $aid = $row->aid;
+	}
+	//print('<pre>');
+	//print_r($aid);
+	//print('</pre>');
+	return $aid;
+}
+
+function getProductBySKU($sku){
+	$result = db_query("SELECT nid FROM {uc_products} WHERE model = '%s' LIMIT 1", $sku);
+	$row = db_fetch_object($result);
+	return $row->nid;
+}
+
+function getRelatedProducts($sku){
+	$result = db_query("SELECT nid FROM {uc_products} WHERE model = '%s'", $sku);
+	$rnid = NULL;
+	while ($row = db_fetch_object($result)) {
+		$rnid[] = $row->nid;
+	}
+	return $rnid;
+}
