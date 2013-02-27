@@ -73,6 +73,7 @@
  * @see zen_process()
  */
 ?>
+<!-- this is a comment. -->
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix">
   <?php print $user_picture; ?>
 
