@@ -71,7 +71,7 @@ html>body {
 	text-decoration: none;
 }
 #headerR ul li a:hover, #headerR ul li a:focus {
-	color: #096;
+	color: #666666;
 }
 
 div.head-nav {
@@ -265,17 +265,17 @@ div#block-block-6 {
 	font-size: 1.1em;
 }
 .links ul li a:hover, .links ul li a:focus {
-	color: #096;
+	color: #999999;
 }
 /* end footer */
 
 
 /* globals */
 a:link, a:visited {
-	color: #096;
+	color: #999999;
 }
 a:hover, a:active, a:focus {
-	color: #030;
+	color: #666666;
 }
 h1 {
 	color: #5A8263;
