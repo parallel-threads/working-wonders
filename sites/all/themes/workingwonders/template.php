@@ -284,4 +284,6 @@ function workingwonders_breadcrumb($breadcrumb) {
 	//if (count($breadcrumb) > 1) {
 		return '<div class="breadcrumb">'. implode(' &raquo; ', $breadcrumb) .'</div>';
 	//}
+
+  // Added a comment.
 }
