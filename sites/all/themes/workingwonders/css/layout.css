@@ -99,17 +99,17 @@ input#edit-search-block-form-1 {
 
 /* styles for nav box */
 #nav {
+	background: none repeat scroll 0 0 #323A5E;
 	margin-top: 2.5em;
 	width: 990px;
-	background: #5a8263;
 	text-align: center;
 /* 	overflow: hidden; */
 }
 .line {
 	width: 100%;
 	min-height: .7em;
-	color: #fd8a00;
-	background-color: #fd8a00;
+	color: #323A5E;
+	background-color: #323A5E;
 	margin-top: .2em;
 }
 
@@ -273,12 +273,13 @@ div#block-block-6 {
 /* globals */
 a:link, a:visited {
 	color: #999999;
+	text-decoration: none;
 }
 a:hover, a:active, a:focus {
 	color: #666666;
 }
 h1 {
-	color: #5A8263;
+	color: #999999;
     font-size: 1.7em;
     font-weight: bold;
     margin: 0;
@@ -466,7 +467,7 @@ table.lib td {
 }	
 	
 .view-display-id-page_1 table.views-view-grid td {
-	text-align: center;
+	text-align: left;
 }
 
 .views-field-tid {

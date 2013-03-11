@@ -9,11 +9,10 @@
 }
 #nav ul.menu a {
 	display: block;
-	color: #fff;
+	color: #D4D4D4;
 	font-size: 1.2em;
 	text-decoration: none;
 	text-align: center;
-	font-weight: bold;
 	padding: .7em 2.14em;
 	border-right: 2px solid #fff;
 }
@@ -21,7 +20,7 @@
 	border-right: none;
 }
 #nav ul.menu a:hover, #nav ul.menu a:focus {
-	background-color: #48684f;
+	background-color: #323A5E;
 }
 #nav ul.menu li ul {
 	position: absolute;
@@ -32,8 +31,8 @@
 	padding: 0;
 }
 #nav ul.menu li ul a {
-	background-color: #48684f;
-	width: 200px;
+	background-color: #999999;
+	width: 120px;
 	text-decoration: none;
 	padding: .5em .5em .8em 2.17em;
 	text-align: left;
@@ -41,7 +40,7 @@
 	border: none;
 }
 #nav ul.menu li ul a:hover, #nav ul.menu li ul a:focus {
-	background-color: #5a8263;
+	background-color: #323A5E;
 }
 #nav ul.menu li:hover ul, #nav ul.menu li.sfhover ul {
 	left: auto;											
