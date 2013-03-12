@@ -225,7 +225,7 @@ div#edit-mailchimp-lists-f8e2cf1f63-EMAIL-wrapper {
 }
 
 div#edit-mailchimp-lists-f8e2cf1f63-EMAIL-wrapper input {
-		border: 1px solid #5a8263;
+		border: 1px solid #323A5E;
 		width: 180px;
 		height: 14px;
 		padding: .5em;
@@ -753,7 +753,7 @@ div#product_column_right {
   float: left;
   border: 1px solid #323A5E;
   border-left: 0;
-  background-color: #323A5E;
+  background-color: #D4D4D4;
   margin-bottom: -1px;
 }
 #product_tabs ul li.first {
@@ -910,8 +910,8 @@ form div.attributes label { /* adds space around attributes dropdwon in bottom b
 
 
 #product_tabs ul li {
-    border-left: 1px solid #5A8263;
-    border-right: 1px solid #5A8263;   
+    border-left: 1px solid #323A5E;
+    border-right: 1px solid #323A5E;   
     margin-right: 10px; 
 }
 
