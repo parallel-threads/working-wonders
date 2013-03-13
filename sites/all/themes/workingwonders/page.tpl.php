@@ -14,7 +14,7 @@
 <div id="mainwrapper">
 
 <div id="header" class="clearfix">
-<div id="headerL"><a href="/"><img src="/<?php print $directory; ?>/images/logo-header.png" alt="working wonders: come home to a better world" width="250" height="94"  /></a></div>
+<div id="headerL"><a href="/"><img src="/<?php print $directory; ?>/images/logo-header.png" alt="working wonders: come home to a better world" width="300" height="94"  /></a></div>
 
 <div id="headerR">
 <div class="phone">866.569.0339</div>
