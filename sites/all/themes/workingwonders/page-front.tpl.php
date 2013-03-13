@@ -101,7 +101,7 @@
 
 <div id="footer" class="clearfix">
   <div class="c1"><a href="/"><img src="/<?php print $directory; ?>/images/logo-footer.png" width="208" height="78" alt="working wonders: come home top a better world" /></a>
-  <div class="copy">&copy; Working Wonders 2011 All Rights Reserved</div>
+  <div class="copy">&copy; Working Wonders 2013 All Rights Reserved</div>
   </div>
   
   		<?php if ($footer_col_mid): ?>
