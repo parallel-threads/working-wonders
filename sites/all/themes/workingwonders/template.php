@@ -161,6 +161,9 @@ function workingwonders_node_submitted($node) {
 }
 
 function workingwonders_breadcrumb($breadcrumb) {
+        $show_breadcrumb = theme_get_setting('zen_breadcrumb');
+        if ($show_breadcrumb !== 'yes') { return; }
+
 	// Get URL arguments
 	$arguments = explode('/', request_uri());
 	//process product breadcrumbs
