@@ -89,7 +89,7 @@ input#edit-search-block-form-1 {
 	vertical-align: middle;
 	height: 14px; 
 /* 	background-color: #e3e6e8; */
-	border: 1px solid #323A5E;
+	border: 1px solid #CCCCCC;
 	padding: .5em;
 	margin-top: -1.7em;
 }
@@ -293,7 +293,7 @@ h2 {
     margin: 1em 0;
 }
 h3 {
-	color: #999999;
+	color: #323A5E;
     font-size: 1.2em;
     font-weight: bold;
     margin: 1em 0 0;
@@ -753,7 +753,7 @@ div#product_column_right {
   float: left;
   border: 1px solid #323A5E;
   border-left: 0;
-  background-color: #D4D4D4;
+  background-color: #E3E6E8;
   margin-bottom: -1px;
 }
 #product_tabs ul li.first {

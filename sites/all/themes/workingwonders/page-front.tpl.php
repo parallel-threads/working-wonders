@@ -16,16 +16,14 @@
 <div id="mainwrapper">
 
 <div id="header" class="clearfix">
-<div id="headerL"><a href="/"><img src="/<?php print $directory; ?>/images/logo-header.png" alt="working wonders: come home to a better world" width="300" height="94"  /></a></div>
+<div id="headerL"><a href="/"><img src="/<?php print $directory; ?>/images/logo-header.png" alt="working wonders: come home to a better world" width="380" height="94"  /></a></div>
 
 <div id="headerR">
 <div class="phone">866.569.0339</div>
 <div class="head-nav">
 <ul class="head-nav">
-   	<li><a href="/wishlist">wish list</a></li>
-   	<li class="last"><a href="/user/login">sign in</a></li>
-   	<li class="spec"><a href="/cart"><img src="/<?php print $directory; ?>/images/cart.png" width="95" height="25" alt="shopping cart" /></a></li>
-   	<li class="spec"><a href="/cart/checkout"><img src="/<?php print $directory; ?>/images/checkout.png" width="71" height="25" alt="checkout" /></a></li>
+   	<li><a href="/cart">shopping cart</a></li>
+   	<li class="last"><a href="/cart/checkout">checkout</a></li>
 </ul> 
 </div>
  
