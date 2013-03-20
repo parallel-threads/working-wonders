@@ -94,6 +94,7 @@
  * - $content_top: Items to appear above the main content of the current page.
  * - $content_bottom: Items to appear below the main content of the current page.
  * - $navigation: Items for the navigation bar.
+ * - $search: Items in the search region.
  * - $sidebar_first: Items for the first sidebar.
  * - $sidebar_second: Items for the second sidebar.
  * - $header: Items for the header region.
@@ -159,7 +160,10 @@
       <?php endif; ?>
 
       <?php if ($search_box): ?>
-        <div id="search-box"><?php print $search_box; ?></div>
+        <div id="search-box">
+          <?php /* print $search_box; */ ?>
+          <?php print $search; ?>
+        </div>
       <?php endif; ?>
 
       <?php print $header; ?>
