@@ -117,7 +117,7 @@ input#edit-search-block-form-1 {
 
 #contentwrapper {
 	margin: 1em 0 0;
-	width: 1000px;
+	width: 990px;
 }
 
 /* left and right columns */
@@ -1012,11 +1012,11 @@ div.views-field-field-image-text-value {
 /* slide show styles */
 .hp-top {
 	margin-top: 10px;
-	height: 465px;
+	height: 320px;
 }
 #block-views-HomepageSlideshow-block_1 {
 	float: left;
-	width: 490px;
+	width: 990px;
 }
 #block-views-HomepageGrid-block_1, #block-views-HomepageGrid-block_3 {
 	float: left;
@@ -1027,8 +1027,8 @@ div.views-field-field-image-text-value {
 }
 #block-views-HomepageSlideshow-block_1 .views-slideshow-controls-bottom {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 0px;
+  left: 0px;
   z-index: 10;
 }
 
