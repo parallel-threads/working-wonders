@@ -112,6 +112,7 @@ input#edit-search-block-form-1 {
 	color: #323A5E;
 	background-color: #323A5E;
 	margin-top: .2em;
+        margin-bottom: 1em;
 }
 
 #contentwrapper {
@@ -287,7 +288,7 @@ h1 {
     padding: 1em 0 1.4em;
 }
 h2 {
-	color: #999999;
+    color: #323A5E;
     font-size: 1.4em;
     font-weight: bold;
     margin: 1em 0;
@@ -302,7 +303,7 @@ h3 {
 	color: #FF7000;
 }
 .green {
-	color: #323A5E;
+	color: #5A8263;
 }
 p.first, h2.first {
 	margin-top: 0;
