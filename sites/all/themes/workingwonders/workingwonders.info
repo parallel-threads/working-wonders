@@ -28,6 +28,7 @@ stylesheets[all][]   = css/layout.css
 stylesheets[all][]   = css/system-menus.css
 stylesheets[all][]   = css/messages.css
 stylesheets[all][]   = css/forms.css
+stylesheets[all][]   = css/search.css
 stylesheets[print][] = css/print.css
 
 
@@ -50,6 +51,7 @@ scripts[] = js/uiScripts.js
   ; To add a new region, copy Zen's page.tpl.php to your sub-theme's directory,
   ; add a line line to this file, and then add the new variable to your
   ; page.tpl.php template.
+regions[search]             = Search
 regions[sidebar_first]      = First sidebar
 regions[sidebar_second]     = Second sidebar
 regions[header]             = Header
