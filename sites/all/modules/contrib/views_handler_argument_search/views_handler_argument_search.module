@@ -1,0 +1,14 @@
+<?php
+
+/*************************************************************************
+* Views hooks                                                            *
+*************************************************************************/
+
+/**
+ * Implementation of hook_views_api().
+ */
+function views_handler_argument_search_views_api() {
+  return array(
+    'api' => '2',
+  );
+}

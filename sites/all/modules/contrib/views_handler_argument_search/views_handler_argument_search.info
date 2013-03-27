@@ -1,0 +1,10 @@
+name = "Views Search Term Argument Handler"
+description = "Creates a Search Term handler for use in Views Arguments."
+core = 6.x
+package = Views
+; Information added by drupal.org packaging script on 2012-07-04
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "views_handler_argument_search"
+datestamp = "1341363310"
+
