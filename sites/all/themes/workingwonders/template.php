@@ -291,7 +291,31 @@ function workingwonders_breadcrumb($breadcrumb) {
   // Added a comment.
 }
 
+/**
+  @brief Implements hook_views_mini_pager.
+  @details Defines the mini-pager for the uc_products_search view.
+*/
+function workingwonders_views_mini_pager__uc_products_search ($tags = array (), $limit = 10, $element = 0, $parameters = array (), $quantity = 5) {
+  return workingwonders_create_mini_pager ($tags, $limit, $element, $parameters, $quantity, l ('All', 'product_search_all/' . arg (1)));
+}
+
+/**
+  @brief Implements hook_views_mini_pager.
+  @details Defines the mini-pager for the uc_products_new view.
+*/
 function workingwonders_views_mini_pager__uc_products_new ($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
+  return workingwonders_create_mini_pager ($tags, $limit, $element, $parameters, $quantity, l ('All', 'products_all/' . arg (1)));
+}
+
+/**
+  @brief Creates a mini pager element.
+  @see hook_views_mini_pager for parameter details.
+  @details This function is essentially a copy of
+    theme_views_mini_pager [views/theme/theme.inc:636] with added code
+    to create an 'All' link. The url for this 'All' link is provided by
+    the $all parameter.
+*/
+function workingwonders_create_mini_pager ($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9, $all = null) {
   global $pager_page_array, $pager_total;
 
   // Calculate various markers within this pager piece:
@@ -339,10 +363,12 @@ function workingwonders_views_mini_pager__uc_products_new ($tags = array(), $lim
         'data' => $li_previous,
       );
     }
-    $items[] = array (
-      'class' => 'pager-all',
-      'data'  => l ('All', 'products_all/' . arg (1))
-    );
+    if ($all) {
+      $items[] = array (
+        'class' => 'pager-all',
+        'data'  => $all
+      );
+    }
 
     // When there is more than one page, create the pager list.
     if ($i != $pager_max) {
