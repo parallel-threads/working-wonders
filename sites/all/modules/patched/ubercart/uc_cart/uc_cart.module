@@ -1319,10 +1319,13 @@ function theme_uc_cart_complete_sale($message) {
 function uc_cart_get_id($create = TRUE) {
   global $user;
 
+/*
   if ($user->uid) {
     return $user->uid;
   }
-  elseif (!isset($_SESSION['uc_cart_id']) && $create) {
+  elseif
+*/
+  if (!isset($_SESSION['uc_cart_id']) && $create) {
     $_SESSION['uc_cart_id'] = md5(uniqid(rand(), TRUE));
   }
 
