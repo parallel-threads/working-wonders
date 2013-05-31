@@ -40,7 +40,7 @@
 	border: none;
 }
 #nav ul.menu li ul a:hover, #nav ul.menu li ul a:focus {
-	background-color: #E3E6E8;
+	background-color: #e1ebf0;
 }
 #nav ul.menu li:hover ul, #nav ul.menu li.sfhover ul {
 	left: auto;											
