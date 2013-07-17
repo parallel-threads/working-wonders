@@ -126,6 +126,10 @@
 <div id="header" class="clearfix">
 <div id="headerL"><a href="/"><img src="/<?php print $directory; ?>/images/logo-header.png" alt="working wonders: come home to a better world" width="380" height="94"  /></a></div>
 
+<div style="float: left; margin-left: 300px;">
+<a href="http://www.sustainablefurnishings.org" target="_blank"><img src="/sites/default/files/sfc-member-seal.jpg"/></a>
+</div>
+
 <div id="headerR">
 <div class="phone">866.569.0339</div>
 <div class="head-nav">
